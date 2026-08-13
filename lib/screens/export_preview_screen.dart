@@ -388,20 +388,19 @@ class _ExportPreviewScreenState extends State<ExportPreviewScreen> {
           const Text('Review Playlist'),
         ]),
         actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 12),
-            child: FilledButton(
-              onPressed: (_creating || foundCount == 0) ? null : _createPlaylist,
-              style: FilledButton.styleFrom(
-                backgroundColor: const Color(0xFF4FC3F7),
-                foregroundColor: Colors.black,
-                minimumSize: const Size(90, 36),
+          if (!_creating)
+            Padding(
+              padding: const EdgeInsets.only(right: 12),
+              child: FilledButton(
+                onPressed: foundCount == 0 ? null : _createPlaylist,
+                style: FilledButton.styleFrom(
+                  backgroundColor: const Color(0xFF4FC3F7),
+                  foregroundColor: Colors.black,
+                  minimumSize: const Size(90, 36),
+                ),
+                child: Text('Create ($foundCount)'),
               ),
-              child: _creating
-                  ? const SizedBox(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
-                  : Text('Create ($foundCount)'),
             ),
-          ),
         ],
       ),
       body: Stack(
