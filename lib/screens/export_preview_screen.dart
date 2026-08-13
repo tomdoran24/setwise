@@ -404,7 +404,9 @@ class _ExportPreviewScreenState extends State<ExportPreviewScreen> {
           ),
         ],
       ),
-      body: ListView.separated(
+      body: Stack(
+        children: [
+          ListView.separated(
         padding: const EdgeInsets.all(16),
         itemCount: _tracks.length,
         separatorBuilder: (_, __) => const Divider(color: Color(0xFF2A2A2A), height: 1),
@@ -454,6 +456,23 @@ class _ExportPreviewScreenState extends State<ExportPreviewScreen> {
             ),
           );
         },
+          ),
+          if (_creating)
+            AbsorbPointer(
+              child: Container(
+                color: const Color(0xCC0A0A0A),
+                alignment: Alignment.center,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const CircularProgressIndicator(color: Color(0xFF4FC3F7)),
+                    const SizedBox(height: 16),
+                    const Text('Creating playlist...', style: TextStyle(color: Colors.white, fontSize: 16)),
+                  ],
+                ),
+              ),
+            ),
+        ],
       ),
     );
   }
