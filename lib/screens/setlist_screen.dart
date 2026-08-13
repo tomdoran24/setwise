@@ -1,12 +1,11 @@
 ﻿import 'dart:async';
 import 'dart:convert';
-// ignore: avoid_web_libraries_in_flutter
-import 'dart:html' as html;
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../services/api_service.dart';
 import '../services/auth_service.dart';
+import '../services/storage_service.dart';
 import '../widgets/account_button.dart';
 import 'export_preview_screen.dart';
 
@@ -69,7 +68,7 @@ class _SetlistScreenState extends State<SetlistScreen> {
   }
 
   void _saveStateForOAuth({String? pendingAction}) {
-    html.window.localStorage['oauth_return'] = jsonEncode({
+    StorageService.set('oauth_return', jsonEncode({
       'artist': widget.artist,
       'mbid': widget.mbid,
       'tour': widget.tour,
@@ -80,7 +79,7 @@ class _SetlistScreenState extends State<SetlistScreen> {
       'songs': _songs,
       'minFrequency': _minFrequency,
       if (pendingAction != null) 'pendingAction': pendingAction,
-    });
+    }));
   }
 
   List<Map<String, dynamic>> get _activeSongs {

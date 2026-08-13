@@ -1,7 +1,6 @@
-// ignore: avoid_web_libraries_in_flutter
-import 'dart:html' as html;
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'storage_service.dart';
 
 const String _baseUrl = 'http://localhost:8000';
 
@@ -41,15 +40,15 @@ class AuthService {
 
   static UserModel? currentUser;
 
-  static String? get jwt => html.window.localStorage[_jwtKey];
+  static String? get jwt => StorageService.get(_jwtKey);
   static bool get isLoggedIn => currentUser != null;
 
   static void setJwt(String token) {
-    html.window.localStorage[_jwtKey] = token;
+    StorageService.set(_jwtKey, token);
   }
 
   static void signOut() {
-    html.window.localStorage.remove(_jwtKey);
+    StorageService.remove(_jwtKey);
     currentUser = null;
   }
 

@@ -1,10 +1,9 @@
 import 'dart:async';
 import 'dart:convert';
-// ignore: avoid_web_libraries_in_flutter
-import 'dart:html' as html;
 import 'package:flutter/material.dart';
 import '../services/api_service.dart';
 import '../services/auth_service.dart';
+import '../services/storage_service.dart';
 import '../widgets/account_button.dart';
 import 'setlist_screen.dart';
 import 'venue_screen.dart';
@@ -113,9 +112,9 @@ class _HomeScreenState extends State<HomeScreen> {
     }
 
     // Restore setlist screen if returning from OAuth
-    final saved = html.window.localStorage['oauth_return'];
+    final saved = StorageService.get('oauth_return');
     if (saved != null) {
-      html.window.localStorage.remove('oauth_return');
+      StorageService.remove('oauth_return');
       if (mounted) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           final data = jsonDecode(saved) as Map<String, dynamic>;
@@ -389,7 +388,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   const Spacer(),
                   const Text(
-                    '© Setlist Predictor 2026',
+                    '© Setwise 2026',
                     style: TextStyle(color: Colors.grey, fontSize: 12),
                     textAlign: TextAlign.center,
                   ),

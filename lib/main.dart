@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'screens/home_screen.dart';
+import 'services/storage_service.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await StorageService.init();
   runApp(const SetlistApp());
 }
 
@@ -11,7 +14,7 @@ class SetlistApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Setlist Predictor',
+      title: 'Setwise',
       theme: ThemeData(
         useMaterial3: true,
         brightness: Brightness.dark,
