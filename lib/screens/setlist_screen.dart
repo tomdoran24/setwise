@@ -528,8 +528,24 @@ class _SetlistScreenState extends State<SetlistScreen> {
                       return Text('$count predicted songs$rangeStr', style: const TextStyle(color: Colors.grey, fontSize: 12));
                     }),
                     const SizedBox(height: 10),
-                    Row(
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
                       children: [
+                        OutlinedButton.icon(
+                          onPressed: _creatingSpotifyPlaylist ? null : _createSpotifyPlaylist,
+                          style: OutlinedButton.styleFrom(
+                            foregroundColor: const Color(0xFF1DB954),
+                            overlayColor: const Color(0xFF888888),
+                            side: const BorderSide(color: Color(0x55888888)),
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                          ),
+                          icon: _creatingSpotifyPlaylist
+                              ? const SizedBox(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2, color: Color(0xFF1DB954)))
+                              : const FaIcon(FontAwesomeIcons.spotify, size: 16, color: Color(0xFF1DB954)),
+                          label: const Text('Spotify', style: TextStyle(color: Color(0xFF888888))),
+                        ),
+                        const SizedBox(width: 8),
                         OutlinedButton.icon(
                           onPressed: _creatingPlaylist ? null : _createPlaylist,
                           style: OutlinedButton.styleFrom(
@@ -541,7 +557,7 @@ class _SetlistScreenState extends State<SetlistScreen> {
                           icon: _creatingPlaylist
                               ? const SizedBox(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2, color: Color(0xFFFF0000)))
                               : const FaIcon(FontAwesomeIcons.youtube, size: 16, color: Color(0xFFFF0000)),
-                          label: const Text('Export', style: TextStyle(color: Color(0xFF888888))),
+                          label: const Text('YouTube', style: TextStyle(color: Color(0xFF888888))),
                         ),
                         const SizedBox(width: 8),
                         OutlinedButton.icon(
@@ -558,20 +574,6 @@ class _SetlistScreenState extends State<SetlistScreen> {
                           label: const Text('YT Music', style: TextStyle(color: Color(0xFF888888))),
                         ),
                         const SizedBox(width: 8),
-                        OutlinedButton.icon(
-                          onPressed: _creatingSpotifyPlaylist ? null : _createSpotifyPlaylist,
-                          style: OutlinedButton.styleFrom(
-                            foregroundColor: const Color(0xFF1DB954),
-                            overlayColor: const Color(0xFF888888),
-                            side: const BorderSide(color: Color(0x55888888)),
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                          ),
-                          icon: _creatingSpotifyPlaylist
-                              ? const SizedBox(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2, color: Color(0xFF1DB954)))
-                              : const FaIcon(FontAwesomeIcons.spotify, size: 16, color: Color(0xFF1DB954)),
-                          label: const Text('Export', style: TextStyle(color: Color(0xFF888888))),
-                        ),
-                        const Spacer(),
                         if (_dualSetlist == null || _activeSet == -1)
                         OutlinedButton.icon(
                           onPressed: () {
@@ -591,6 +593,7 @@ class _SetlistScreenState extends State<SetlistScreen> {
                           label: Text(_editing ? 'Done' : 'Edit', style: TextStyle(color: _editing ? const Color(0xFF4FC3F7) : const Color(0xFF888888))),
                         ),
                       ],
+                    ),
                     ),
                     if (_editing) ...[
                       const SizedBox(height: 8),
