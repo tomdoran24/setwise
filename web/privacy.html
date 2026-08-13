@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Privacy Policy — Setwise</title>
+  <style>
+    :root {
+      --bg: #0D1117;
+      --surface: #161B22;
+      --border: #30363D;
+      --text: #E6EDF3;
+      --muted: #8B949E;
+      --accent: #60A5FA;
+      --font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+      --font-mono: "SF Mono", "Fira Code", "Cascadia Code", Consolas, monospace;
+    }
+
+    @media (prefers-color-scheme: light) {
+      :root:not([data-theme="dark"]) {
+        --bg: #F6F8FA;
+        --surface: #FFFFFF;
+        --border: #D0D7DE;
+        --text: #1F2328;
+        --muted: #656D76;
+        --accent: #2563EB;
+      }
+    }
+    :root[data-theme="light"] {
+      --bg: #F6F8FA;
+      --surface: #FFFFFF;
+      --border: #D0D7DE;
+      --text: #1F2328;
+      --muted: #656D76;
+      --accent: #2563EB;
+    }
+    :root[data-theme="dark"] {
+      --bg: #0D1117;
+      --surface: #161B22;
+      --border: #30363D;
+      --text: #E6EDF3;
+      --muted: #8B949E;
+      --accent: #60A5FA;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: 15px;
+      line-height: 1.7;
+      padding: 48px 24px 96px;
+    }
+
+    .wrap {
+      max-width: 680px;
+      margin: 0 auto;
+    }
+
+    header {
+      margin-bottom: 48px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .wordmark {
+      font-size: 13px;
+      font-family: var(--font-mono);
+      color: var(--accent);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+
+    h1 {
+      font-size: 28px;
+      font-weight: 600;
+      color: var(--text);
+      line-height: 1.3;
+      margin-bottom: 10px;
+    }
+
+    .meta {
+      font-size: 13px;
+      color: var(--muted);
+      font-family: var(--font-mono);
+    }
+
+    section {
+      margin-bottom: 40px;
+    }
+
+    .section-eyebrow {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 10px;
+    }
+
+    h2 {
+      font-size: 17px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 12px;
+    }
+
+    p {
+      color: var(--text);
+      margin-bottom: 12px;
+    }
+
+    p:last-child { margin-bottom: 0; }
+
+    ul {
+      padding-left: 20px;
+      margin-bottom: 12px;
+    }
+
+    li {
+      margin-bottom: 6px;
+      color: var(--text);
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 20px 24px;
+      margin-top: 16px;
+    }
+
+    .card p { margin-bottom: 8px; }
+    .card p:last-child { margin-bottom: 0; }
+
+    a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+    a:hover { text-decoration: underline; }
+
+    .divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 40px 0;
+    }
+
+    .contact-block {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--accent);
+      border-radius: 0 8px 8px 0;
+      padding: 20px 24px;
+    }
+
+    .contact-block p { margin-bottom: 4px; }
+
+    .muted { color: var(--muted); }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="wordmark">Setwise</div>
+      <h1>Privacy Policy</h1>
+      <div class="meta">Last updated: August 2026</div>
+    </header>
+
+    <section>
+      <div class="section-eyebrow">Overview</div>
+      <h2>What this policy covers</h2>
+      <p>Setwise is a concert setlist prediction app that helps you prepare for live shows. This policy explains what personal information we collect, how we use it, and your rights regarding that information.</p>
+      <p>We collect only what we need to provide the service. We do not sell your data.</p>
+    </section>
+
+    <hr class="divider">
+
+    <section>
+      <div class="section-eyebrow">Data collection</div>
+      <h2>Information we collect</h2>
+      <p>When you use Setwise, we may collect the following:</p>
+
+      <div class="card">
+        <p><strong>Account information</strong></p>
+        <p class="muted">If you sign in with Google, we receive your name and email address from Google. This is used to identify your account and is stored securely in our database.</p>
+      </div>
+
+      <div class="card">
+        <p><strong>Spotify connection</strong></p>
+        <p class="muted">If you connect your Spotify account, we store an access token and refresh token that allow us to create playlists on your behalf. We do not store your Spotify password. We do not access your listening history or personal playlists.</p>
+      </div>
+
+      <div class="card">
+        <p><strong>YouTube connection</strong></p>
+        <p class="muted">If you connect your YouTube account, we store a token that allows us to create playlists on your behalf. We do not access your viewing history or existing playlists.</p>
+      </div>
+
+      <div class="card">
+        <p><strong>Usage data</strong></p>
+        <p class="muted">We may log basic request data (artist searches, setlist predictions) to improve prediction accuracy and diagnose errors. This is not linked to identifiable personal information.</p>
+      </div>
+    </section>
+
+    <hr class="divider">
+
+    <section>
+      <div class="section-eyebrow">How we use it</div>
+      <h2>Purpose of data collection</h2>
+      <p>We use the information we collect to:</p>
+      <ul>
+        <li>Provide and operate the Setwise service</li>
+        <li>Create Spotify and YouTube playlists on your behalf when requested</li>
+        <li>Maintain your account and preferences across sessions</li>
+        <li>Diagnose and fix technical issues</li>
+      </ul>
+      <p>We do not use your data for advertising, profiling, or any purpose beyond operating Setwise.</p>
+    </section>
+
+    <hr class="divider">
+
+    <section>
+      <div class="section-eyebrow">Third parties</div>
+      <h2>Services we work with</h2>
+      <p>Setwise uses the following third-party services to function. Each has its own privacy policy.</p>
+      <ul>
+        <li><strong>Spotify</strong> — playlist creation. <a href="https://www.spotify.com/privacy" target="_blank" rel="noopener">Spotify Privacy Policy</a></li>
+        <li><strong>Google / YouTube</strong> — sign-in and playlist creation. <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Google Privacy Policy</a></li>
+        <li><strong>setlist.fm</strong> — historical setlist data</li>
+        <li><strong>Ticketmaster</strong> — upcoming show data</li>
+      </ul>
+      <p>Your data is not shared with these services beyond what is necessary to fulfil your requests (e.g. your Spotify token is sent to Spotify when creating a playlist).</p>
+    </section>
+
+    <hr class="divider">
+
+    <section>
+      <div class="section-eyebrow">Storage & security</div>
+      <h2>How your data is stored</h2>
+      <p>Your account data and OAuth tokens are stored in a secured PostgreSQL database hosted on Railway (EU/US infrastructure). Tokens are stored at rest and transmitted over HTTPS only.</p>
+      <p>We retain your data for as long as your account is active. If you wish to have your data deleted, contact us at the address below and we will remove it within 30 days.</p>
+    </section>
+
+    <hr class="divider">
+
+    <section>
+      <div class="section-eyebrow">Your rights</div>
+      <h2>Control over your data</h2>
+      <p>You have the right to:</p>
+      <ul>
+        <li>Request a copy of the data we hold about you</li>
+        <li>Request deletion of your account and associated data</li>
+        <li>Disconnect your Spotify or YouTube account at any time via your account settings in the app</li>
+        <li>Revoke Setwise's access to your Google account via <a href="https://myaccount.google.com/permissions" target="_blank" rel="noopener">Google Account Permissions</a></li>
+      </ul>
+    </section>
+
+    <hr class="divider">
+
+    <section>
+      <div class="section-eyebrow">Contact</div>
+      <h2>Get in touch</h2>
+      <p>If you have any questions about this policy or want to exercise your data rights, contact us:</p>
+      <div class="contact-block">
+        <p><strong>Tom Doran</strong></p>
+        <p><a href="mailto:tomdoran20@gmail.com">tomdoran20@gmail.com</a></p>
+      </div>
+      <p style="margin-top: 16px;" class="muted">This policy may be updated occasionally. The date at the top of this page reflects the most recent revision.</p>
+    </section>
+  </div>
+</body>
+</html>
