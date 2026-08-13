@@ -531,39 +531,75 @@ class _SetlistScreenState extends State<SetlistScreen> {
                     Row(
                       children: [
                         Expanded(
-                          child: SingleChildScrollView(
-                            scrollDirection: Axis.horizontal,
-                            child: Row(
-                              children: [
-                                OutlinedButton.icon(
-                                  onPressed: _creatingSpotifyPlaylist ? null : _createSpotifyPlaylist,
-                                  style: OutlinedButton.styleFrom(
-                                    foregroundColor: const Color(0xFF1DB954),
-                                    overlayColor: const Color(0xFF888888),
-                                    side: const BorderSide(color: Color(0x55888888)),
-                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                                  ),
-                                  icon: _creatingSpotifyPlaylist
-                                      ? const SizedBox(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2, color: Color(0xFF1DB954)))
-                                      : const FaIcon(FontAwesomeIcons.spotify, size: 16, color: Color(0xFF1DB954)),
-                                  label: const Text('Spotify', style: TextStyle(color: Color(0xFF888888))),
+                          child: Stack(
+                            children: [
+                              SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
+                                child: Row(
+                                  children: [
+                                    OutlinedButton.icon(
+                                      onPressed: _creatingSpotifyPlaylist ? null : _createSpotifyPlaylist,
+                                      style: OutlinedButton.styleFrom(
+                                        foregroundColor: const Color(0xFF1DB954),
+                                        overlayColor: const Color(0xFF888888),
+                                        side: const BorderSide(color: Color(0x55888888)),
+                                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                                      ),
+                                      icon: _creatingSpotifyPlaylist
+                                          ? const SizedBox(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2, color: Color(0xFF1DB954)))
+                                          : const FaIcon(FontAwesomeIcons.spotify, size: 16, color: Color(0xFF1DB954)),
+                                      label: const Text('Spotify', style: TextStyle(color: Color(0xFF888888))),
+                                    ),
+                                    const SizedBox(width: 8),
+                                    OutlinedButton.icon(
+                                      onPressed: _creatingPlaylist ? null : _createPlaylist,
+                                      style: OutlinedButton.styleFrom(
+                                        foregroundColor: const Color(0xFFFF0000),
+                                        overlayColor: const Color(0xFF888888),
+                                        side: const BorderSide(color: Color(0x55888888)),
+                                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                                      ),
+                                      icon: _creatingPlaylist
+                                          ? const SizedBox(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2, color: Color(0xFFFF0000)))
+                                          : const FaIcon(FontAwesomeIcons.youtube, size: 16, color: Color(0xFFFF0000)),
+                                      label: const Text('YouTube', style: TextStyle(color: Color(0xFF888888))),
+                                    ),
+                                    const SizedBox(width: 8),
+                                    OutlinedButton.icon(
+                                      onPressed: _creatingYtMusicPlaylist ? null : _createYtMusicPlaylist,
+                                      style: OutlinedButton.styleFrom(
+                                        foregroundColor: const Color(0xFFFF0000),
+                                        overlayColor: const Color(0xFF888888),
+                                        side: const BorderSide(color: Color(0x55888888)),
+                                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                                      ),
+                                      icon: _creatingYtMusicPlaylist
+                                          ? const SizedBox(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2, color: Color(0xFFFF0000)))
+                                          : const FaIcon(FontAwesomeIcons.music, size: 16, color: Color(0xFFFF0000)),
+                                      label: const Text('YT Music', style: TextStyle(color: Color(0xFF888888))),
+                                    ),
+                                    const SizedBox(width: 24),
+                                  ],
                                 ),
-                                const SizedBox(width: 8),
-                                OutlinedButton.icon(
-                                  onPressed: _creatingPlaylist ? null : _createPlaylist,
-                                  style: OutlinedButton.styleFrom(
-                                    foregroundColor: const Color(0xFFFF0000),
-                                    overlayColor: const Color(0xFF888888),
-                                    side: const BorderSide(color: Color(0x55888888)),
-                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                              ),
+                              Positioned(
+                                right: 0,
+                                top: 0,
+                                bottom: 0,
+                                width: 32,
+                                child: IgnorePointer(
+                                  child: DecoratedBox(
+                                    decoration: BoxDecoration(
+                                      gradient: LinearGradient(
+                                        begin: Alignment.centerLeft,
+                                        end: Alignment.centerRight,
+                                        colors: [const Color(0x000A0A0A), const Color(0xFF0A0A0A)],
+                                      ),
+                                    ),
                                   ),
-                                  icon: _creatingPlaylist
-                                      ? const SizedBox(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2, color: Color(0xFFFF0000)))
-                                      : const FaIcon(FontAwesomeIcons.youtube, size: 16, color: Color(0xFFFF0000)),
-                                  label: const Text('YouTube', style: TextStyle(color: Color(0xFF888888))),
                                 ),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
                         ),
                         if (_dualSetlist == null || _activeSet == -1) ...[
