@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import '../services/api_service.dart';
 import '../services/auth_service.dart';
 import '../services/storage_service.dart';
+import '../services/url_service.dart';
 import '../widgets/account_button.dart';
 import 'setlist_screen.dart';
 import 'venue_screen.dart';
@@ -76,7 +77,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> _handleOAuthReturn() async {
-    final uri = Uri.base;
+    final uri = UrlService.currentUri();
 
     if (uri.queryParameters['auth_error'] != null) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -93,6 +94,7 @@ class _HomeScreenState extends State<HomeScreen> {
     final jwt = uri.queryParameters['jwt'];
     if (jwt != null && jwt.isNotEmpty) {
       AuthService.setJwt(jwt);
+      UrlService.replaceUrl('/');
     }
 
     // Spotify token from Spotify OAuth callback
