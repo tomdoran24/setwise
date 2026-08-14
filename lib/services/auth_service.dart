@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'storage_service.dart';
 
-const String _baseUrl = 'http://localhost:8000';
+const String _baseUrl = 'https://web-production-f6e8b.up.railway.app';
 
 class UserModel {
   final String userId;
