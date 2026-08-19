@@ -731,7 +731,14 @@ class _SetlistScreenState extends State<SetlistScreen> {
                                   }),
                                   IconButton(
                                     icon: const Icon(Icons.remove_circle_outline, color: Colors.redAccent),
-                                    onPressed: () => setState(() => _songs!.remove(visible[index])),
+                                    onPressed: () => setState(() {
+                                      if (_dualSetlist != null && _activeSet >= 0) {
+                                        final key = _activeSet == 0 ? 'set_a' : 'set_b';
+                                        (_dualSetlist![key]['songs'] as List).remove(visible[index]);
+                                      } else {
+                                        _songs!.remove(visible[index]);
+                                      }
+                                    }),
                                   ),
                                 ],
                               ),
