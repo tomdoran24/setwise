@@ -13,11 +13,25 @@ class NotificationBell extends StatefulWidget {
 class _NotificationBellState extends State<NotificationBell> {
   List<Map<String, dynamic>> _upcomingShows = [];
   bool _loaded = false;
+  bool _wasLoggedIn = false;
 
   @override
   void initState() {
     super.initState();
+    _wasLoggedIn = AuthService.isLoggedIn;
     _load();
+  }
+
+  @override
+  void didUpdateWidget(covariant NotificationBell oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    final nowLoggedIn = AuthService.isLoggedIn;
+    if (nowLoggedIn != _wasLoggedIn) {
+      _wasLoggedIn = nowLoggedIn;
+      _upcomingShows = [];
+      _loaded = false;
+      _load();
+    }
   }
 
   Future<void> _load() async {
@@ -28,14 +42,12 @@ class _NotificationBellState extends State<NotificationBell> {
     try {
       final shows = await ApiService.getMyUpcomingShows();
       final now = DateTime.now();
-      final soon = shows.where((s) {
+      final upcoming = shows.where((s) {
         try {
-          final d = DateTime.parse(s['date'] as String);
-          final diff = d.difference(now).inDays;
-          return diff >= 0 && diff <= 30;
+          return DateTime.parse(s['date'] as String).isAfter(now.subtract(const Duration(days: 1)));
         } catch (_) { return false; }
       }).cast<Map<String, dynamic>>().toList();
-      if (mounted) setState(() { _upcomingShows = soon; _loaded = true; });
+      if (mounted) setState(() { _upcomingShows = upcoming; _loaded = true; });
     } catch (_) {
       if (mounted) setState(() => _loaded = true);
     }
@@ -58,7 +70,7 @@ class _NotificationBellState extends State<NotificationBell> {
             children: const [
               Icon(Icons.notifications_none, color: Colors.grey, size: 40),
               SizedBox(height: 12),
-              Text('No upcoming shows in the next 30 days', style: TextStyle(color: Colors.grey, fontSize: 14), textAlign: TextAlign.center),
+              Text('No upcoming shows saved', style: TextStyle(color: Colors.grey, fontSize: 14), textAlign: TextAlign.center),
             ],
           ),
         ),
@@ -81,13 +93,13 @@ class _NotificationBellState extends State<NotificationBell> {
             const SizedBox(height: 12),
             Container(width: 40, height: 4, decoration: BoxDecoration(color: Colors.grey[700], borderRadius: BorderRadius.circular(2))),
             const SizedBox(height: 12),
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Row(
                 children: [
-                  Icon(Icons.notifications, color: Color(0xFF4FC3F7), size: 18),
-                  SizedBox(width: 8),
-                  Text('Upcoming shows (next 30 days)', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600)),
+                  const Icon(Icons.notifications, color: Color(0xFF4FC3F7), size: 18),
+                  const SizedBox(width: 8),
+                  Text('Upcoming shows (${_upcomingShows.length})', style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w600)),
                 ],
               ),
             ),
@@ -151,7 +163,7 @@ class _NotificationBellState extends State<NotificationBell> {
   Widget build(BuildContext context) {
     final count = _upcomingShows.length;
     return IconButton(
-      tooltip: AuthService.isLoggedIn ? (count > 0 ? '$count upcoming show${count == 1 ? '' : 's'}' : 'Notifications') : 'Sign in for notifications',
+      tooltip: !AuthService.isLoggedIn ? 'Sign in for notifications' : (count > 0 ? '$count upcoming show${count == 1 ? '' : 's'}' : 'Upcoming shows'),
       onPressed: _showNotifications,
       icon: Stack(
         clipBehavior: Clip.none,
