@@ -1,6 +1,7 @@
 ﻿import 'package:flutter/material.dart';
 import '../services/api_service.dart';
 import '../widgets/account_button.dart';
+import '../widgets/notification_bell.dart';
 import 'setlist_screen.dart';
 
 class VenueScreen extends StatefulWidget {
@@ -123,7 +124,7 @@ class _VenueScreenState extends State<VenueScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(actions: const [AccountButton(), SizedBox(width: 8)]),
+      appBar: AppBar(actions: const [NotificationBell(), AccountButton(), SizedBox(width: 8)]),
       body: FutureBuilder<List<dynamic>>(
         future: _showsFuture,
         builder: (context, snapshot) {

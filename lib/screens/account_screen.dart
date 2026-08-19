@@ -81,6 +81,52 @@ class _AccountScreenState extends State<AccountScreen> {
     launchUrl(Uri.parse(ApiService.authUrl), webOnlyWindowName: '_self');
   }
 
+  Future<void> _disconnectYoutube() async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (_) => AlertDialog(
+        backgroundColor: const Color(0xFF1A1A1A),
+        title: const Text('Disconnect YouTube?', style: TextStyle(color: Colors.white)),
+        content: const Text('Your YouTube account will be unlinked. You can reconnect at any time.', style: TextStyle(color: Colors.grey)),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Cancel')),
+          TextButton(onPressed: () => Navigator.pop(context, true), style: TextButton.styleFrom(foregroundColor: Colors.red), child: const Text('Disconnect')),
+        ],
+      ),
+    );
+    if (confirmed != true) return;
+    try {
+      await ApiService.disconnectPlatform('google');
+      await AuthService.fetchMe();
+      if (mounted) setState(() {});
+    } catch (_) {
+      if (mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Failed to disconnect YouTube')));
+    }
+  }
+
+  Future<void> _disconnectSpotify() async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (_) => AlertDialog(
+        backgroundColor: const Color(0xFF1A1A1A),
+        title: const Text('Disconnect Spotify?', style: TextStyle(color: Colors.white)),
+        content: const Text('Your Spotify account will be unlinked. You can reconnect at any time.', style: TextStyle(color: Colors.grey)),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Cancel')),
+          TextButton(onPressed: () => Navigator.pop(context, true), style: TextButton.styleFrom(foregroundColor: Colors.red), child: const Text('Disconnect')),
+        ],
+      ),
+    );
+    if (confirmed != true) return;
+    try {
+      await ApiService.disconnectPlatform('spotify');
+      spotifyToken = null;
+      if (mounted) setState(() {});
+    } catch (_) {
+      if (mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Failed to disconnect Spotify')));
+    }
+  }
+
   void _signOut() {
     AuthService.signOut();
     spotifyToken = null;
@@ -167,6 +213,7 @@ class _AccountScreenState extends State<AccountScreen> {
           color: const Color(0xFFFF0000),
           connected: user.youtubeConnected,
           onConnect: _signIn,
+          onDisconnect: user.youtubeConnected ? _disconnectYoutube : null,
         ),
         _PlatformTile(
           icon: FontAwesomeIcons.spotify,
@@ -174,6 +221,7 @@ class _AccountScreenState extends State<AccountScreen> {
           color: const Color(0xFF1DB954),
           connected: spotifyToken != null,
           onConnect: () => launchUrl(Uri.parse(ApiService.spotifyAuthUrl)),
+          onDisconnect: spotifyToken != null ? _disconnectSpotify : null,
         ),
 
         const SizedBox(height: 24),
@@ -272,6 +320,7 @@ class _PlatformTile extends StatelessWidget {
   final Color color;
   final bool connected;
   final VoidCallback onConnect;
+  final VoidCallback? onDisconnect;
 
   const _PlatformTile({
     required this.icon,
@@ -279,6 +328,7 @@ class _PlatformTile extends StatelessWidget {
     required this.color,
     required this.connected,
     required this.onConnect,
+    this.onDisconnect,
   });
 
   @override
@@ -291,6 +341,14 @@ class _PlatformTile extends StatelessWidget {
                 const Icon(Icons.check_circle, color: Color(0xFF1DB954), size: 18),
                 const SizedBox(width: 4),
                 const Text('Connected', style: TextStyle(color: Color(0xFF1DB954), fontSize: 13)),
+                if (onDisconnect != null) ...[
+                  const SizedBox(width: 8),
+                  TextButton(
+                    onPressed: onDisconnect,
+                    style: TextButton.styleFrom(foregroundColor: Colors.grey, padding: EdgeInsets.zero, minimumSize: const Size(0, 0)),
+                    child: const Text('Disconnect', style: TextStyle(fontSize: 12)),
+                  ),
+                ],
               ])
             : TextButton(
                 onPressed: onConnect,

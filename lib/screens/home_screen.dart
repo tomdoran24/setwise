@@ -6,6 +6,7 @@ import '../services/auth_service.dart';
 import '../services/storage_service.dart';
 import '../services/url_service.dart';
 import '../widgets/account_button.dart';
+import '../widgets/notification_bell.dart';
 import 'setlist_screen.dart';
 import 'venue_screen.dart';
 
@@ -122,6 +123,8 @@ class _HomeScreenState extends State<HomeScreen> {
           final data = jsonDecode(saved) as Map<String, dynamic>;
           final rawSongs = data['songs'] as List?;
           final songs = rawSongs?.map((s) => Map<String, dynamic>.from(s as Map)).toList();
+          final rawDual = data['dualSetlist'];
+          final dualSetlist = rawDual != null ? Map<String, dynamic>.from(rawDual as Map) : null;
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(
@@ -136,6 +139,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 initialSongs: songs,
                 initialMinFrequency: data['minFrequency'] as int? ?? 1,
                 pendingAction: data['pendingAction'] as String?,
+                initialDualSetlist: dualSetlist,
+                initialActiveSet: data['activeSet'] as int? ?? -1,
               ),
             ),
           );
@@ -397,10 +402,16 @@ class _HomeScreenState extends State<HomeScreen> {
                 ],
               ),
             ),
-            const Positioned(
+            Positioned(
               top: 8,
               right: 8,
-              child: AccountButton(),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: const [
+                  NotificationBell(),
+                  AccountButton(),
+                ],
+              ),
             ),
           ],
         ),

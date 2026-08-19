@@ -270,6 +270,12 @@ class ApiService {
     if (response.statusCode != 200) throw Exception('Failed to update preferences');
   });
 
+  static Future<void> disconnectPlatform(String platform) => _call(() async {
+    final uri = Uri.parse('$_baseUrl/auth/connections/$platform');
+    final response = await http.delete(uri, headers: AuthService.authHeaders);
+    if (response.statusCode != 200) throw Exception('Failed to disconnect');
+  });
+
   static String artistImageProxyUrl(String imageUrl) =>
       '$_baseUrl/setlists/image?url=${Uri.encodeComponent(imageUrl)}';
 }

@@ -7,6 +7,7 @@ import '../services/api_service.dart';
 import '../services/auth_service.dart';
 import '../services/storage_service.dart';
 import '../widgets/account_button.dart';
+import '../widgets/notification_bell.dart';
 import 'export_preview_screen.dart';
 
 
@@ -21,7 +22,9 @@ class SetlistScreen extends StatefulWidget {
   final List<Map<String, dynamic>>? initialSongs;
   final int initialMinFrequency;
   final String? pendingAction;
-  const SetlistScreen({super.key, required this.artist, required this.mbid, this.tour, this.imageUrl, this.venueName, this.venueCity, this.showNotListed = false, this.initialSongs, this.initialMinFrequency = 1, this.pendingAction});
+  final Map<String, dynamic>? initialDualSetlist;
+  final int initialActiveSet;
+  const SetlistScreen({super.key, required this.artist, required this.mbid, this.tour, this.imageUrl, this.venueName, this.venueCity, this.showNotListed = false, this.initialSongs, this.initialMinFrequency = 1, this.pendingAction, this.initialDualSetlist, this.initialActiveSet = -1});
 
   @override
   State<SetlistScreen> createState() => _SetlistScreenState();
@@ -57,6 +60,8 @@ class _SetlistScreenState extends State<SetlistScreen> {
     _minPct = widget.initialMinFrequency > 1 ? widget.initialMinFrequency : 70;
     if (widget.initialSongs != null) {
       _songs = widget.initialSongs;
+      _dualSetlist = widget.initialDualSetlist;
+      _activeSet = widget.initialDualSetlist != null ? widget.initialActiveSet : -1;
       _staleDialogShown = true; // don't re-show stale dialog on restore
       _setlistFuture = Future.value({'predicted_set': _songs, 'is_stale': false, 'most_recent_date': null});
       if (widget.pendingAction == 'spotify') {
@@ -78,6 +83,8 @@ class _SetlistScreenState extends State<SetlistScreen> {
       'showNotListed': widget.showNotListed,
       'songs': _songs,
       'minFrequency': _minPct,
+      if (_dualSetlist != null) 'dualSetlist': _dualSetlist,
+      'activeSet': _activeSet,
       if (pendingAction != null) 'pendingAction': pendingAction,
     }));
   }
@@ -322,6 +329,7 @@ class _SetlistScreenState extends State<SetlistScreen> {
     return Scaffold(
       appBar: AppBar(
         actions: [
+          const NotificationBell(),
           const AccountButton(),
           const SizedBox(width: 4),
         ],
