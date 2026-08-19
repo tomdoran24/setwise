@@ -43,7 +43,7 @@ class _SetlistScreenState extends State<SetlistScreen> {
   bool _saved = false;
   bool _tracking = false;
   bool _tracked = false;
-  late int _minFrequency;
+  int _minPct = 70;
   bool _staleDialogShown = false;
   List<Map<String, dynamic>>? _songs;
   Map<String, dynamic>? _dualSetlist;
@@ -54,7 +54,7 @@ class _SetlistScreenState extends State<SetlistScreen> {
   @override
   void initState() {
     super.initState();
-    _minFrequency = widget.initialMinFrequency;
+    _minPct = widget.initialMinFrequency > 1 ? widget.initialMinFrequency : 70;
     if (widget.initialSongs != null) {
       _songs = widget.initialSongs;
       _staleDialogShown = true; // don't re-show stale dialog on restore
@@ -77,7 +77,7 @@ class _SetlistScreenState extends State<SetlistScreen> {
       'venueCity': widget.venueCity,
       'showNotListed': widget.showNotListed,
       'songs': _songs,
-      'minFrequency': _minFrequency,
+      'minFrequency': _minPct,
       if (pendingAction != null) 'pendingAction': pendingAction,
     }));
   }
@@ -116,7 +116,7 @@ class _SetlistScreenState extends State<SetlistScreen> {
 
   List<Map<String, dynamic>> get _visibleSongs =>
       _activeSongs
-          .where((s) => (s['frequency'] as int) >= _minFrequency)
+          .where((s) => ((s['frequency'] as int) / (s['out_of'] as int) * 100) >= _minPct)
           .toList();
 
   List<String> get _visibleSongNames => _visibleSongs.map((s) => s['song'] as String).toList();
@@ -231,7 +231,7 @@ class _SetlistScreenState extends State<SetlistScreen> {
     if (_songs == null || _songs!.isEmpty) return;
     setState(() => _saving = true);
     try {
-      final visible = _songs!.where((s) => (s['frequency'] as int) >= _minFrequency).toList();
+      final visible = _songs!.where((s) => ((s['frequency'] as int) / (s['out_of'] as int) * 100) >= _minPct).toList();
       await ApiService.saveSetlist(widget.artist, widget.mbid, visible);
       if (mounted) setState(() { _saving = false; _saved = true; });
       ScaffoldMessenger.of(context).showSnackBar(
@@ -507,7 +507,7 @@ class _SetlistScreenState extends State<SetlistScreen> {
                       const SizedBox(height: 10),
                     ],
                     Builder(builder: (_) {
-                      final count = songs.where((s) => (s['frequency'] as int) >= _minFrequency).length;
+                      final count = songs.where((s) => ((s['frequency'] as int) / (s['out_of'] as int) * 100) >= _minPct).length;
                       if (_dualSetlist != null && _activeSet >= 0) {
                         final key = _activeSet == 0 ? 'set_a' : 'set_b';
                         final set = _dualSetlist![key] as Map;
@@ -621,12 +621,12 @@ class _SetlistScreenState extends State<SetlistScreen> {
                     Row(
                       children: [
                         Text(
-                          'Min. probability: ${(((_minFrequency / (_activeSongs.isEmpty ? 10 : _activeSongs.first['out_of'] as int)) * 100) / 10).round().clamp(1, 10) * 10}%',
+                          'Min. probability: $_minPct%',
                           style: const TextStyle(color: Colors.grey, fontSize: 12),
                         ),
                         const Spacer(),
                         Text(
-                          '${_activeSongs.where((s) => (s['frequency'] as int) >= _minFrequency).length} songs',
+                          '${_activeSongs.where((s) => ((s['frequency'] as int) / (s['out_of'] as int) * 100) >= _minPct).length} songs',
                           style: const TextStyle(color: Colors.grey, fontSize: 12),
                         ),
                       ],
@@ -640,15 +640,11 @@ class _SetlistScreenState extends State<SetlistScreen> {
                         trackHeight: 2,
                       ),
                       child: Slider(
-                        value: (((_minFrequency / (_activeSongs.isEmpty ? 10 : _activeSongs.first['out_of'] as int)) * 100) / 10).round().clamp(1, 10).toDouble() * 10,
+                        value: _minPct.toDouble(),
                         min: 10,
                         max: 100,
                         divisions: 9,
-                        onChanged: (v) {
-                          final snapped = (v / 10).round() * 10;
-                          final outOf = _activeSongs.isEmpty ? 10 : _activeSongs.first['out_of'] as int;
-                          setState(() => _minFrequency = ((snapped / 100) * outOf).round().clamp(1, outOf));
-                        },
+                        onChanged: (v) => setState(() => _minPct = v.round()),
                       ),
                     ),
                     const SizedBox(height: 12),
@@ -670,7 +666,7 @@ class _SetlistScreenState extends State<SetlistScreen> {
               Expanded(
                 child: _editing
                     ? Builder(builder: (context) {
-                        final visible = songs.where((s) => (s['frequency'] as int) >= _minFrequency).toList();
+                        final visible = songs.where((s) => ((s['frequency'] as int) / (s['out_of'] as int) * 100) >= _minPct).toList();
                         return ReorderableListView.builder(
                         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                         buildDefaultDragHandles: false,
@@ -681,7 +677,7 @@ class _SetlistScreenState extends State<SetlistScreen> {
                             final item = visible.removeAt(oldIndex);
                             visible.insert(newIndex, item);
                             // Splice reordered visible songs back, filtered songs go to end
-                            final hidden = songs.where((s) => (s['frequency'] as int) < _minFrequency).toList();
+                            final hidden = songs.where((s) => ((s['frequency'] as int) / (s['out_of'] as int) * 100) < _minPct).toList();
                             _songs = [...visible, ...hidden];
                           });
                         },
@@ -745,7 +741,7 @@ class _SetlistScreenState extends State<SetlistScreen> {
                       );
                       })
                     : Builder(builder: (context) {
-                        final visible = songs.where((s) => (s['frequency'] as int) >= _minFrequency).toList();
+                        final visible = songs.where((s) => ((s['frequency'] as int) / (s['out_of'] as int) * 100) >= _minPct).toList();
                         return ListView.builder(
                         padding: const EdgeInsets.symmetric(horizontal: 16),
                         itemCount: visible.length,
