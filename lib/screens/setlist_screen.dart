@@ -72,6 +72,33 @@ class _SetlistScreenState extends State<SetlistScreen> {
     }
   }
 
+  Future<void> _triggerAccuracyIfNeeded(List<Map<String, dynamic>> songs) async {
+    // If the user has a saved show for this artist that recently passed, compute accuracy
+    try {
+      final shows = await ApiService.getMyUpcomingShows();
+      final now = DateTime.now();
+      for (final s in shows.cast<Map<String, dynamic>>()) {
+        if ((s['mbid'] as String?) != widget.mbid) continue;
+        final date = s['date'] as String? ?? '';
+        try {
+          final d = DateTime.parse(date);
+          final daysPast = now.difference(d).inDays;
+          if (daysPast < 1 || daysPast > 14) continue;
+          // Show just happened — compute accuracy
+          final predictedNames = songs.map((s) => s['song'] as String).toList();
+          ApiService.computeAccuracy(
+            mbid: widget.mbid,
+            artistName: widget.artist,
+            showDate: date,
+            predictedSongs: predictedNames,
+            venue: s['venue'] as String?,
+            city: s['city'] as String?,
+          ).catchError((_) {});
+        } catch (_) {}
+      }
+    } catch (_) {}
+  }
+
   void _saveStateForOAuth({String? pendingAction}) {
     StorageService.set('oauth_return', jsonEncode({
       'artist': widget.artist,
@@ -384,6 +411,7 @@ class _SetlistScreenState extends State<SetlistScreen> {
             if (AuthService.isLoggedIn) {
               ApiService.trackArtist(widget.artist, widget.mbid, imageUrl: widget.imageUrl)
                   .catchError((_) {});
+              _triggerAccuracyIfNeeded(_songs!);
             }
             WidgetsBinding.instance.addPostFrameCallback((_) { if (mounted) setState(() {}); });
           }

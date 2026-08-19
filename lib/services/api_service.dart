@@ -270,6 +270,37 @@ class ApiService {
     if (response.statusCode != 200) throw Exception('Failed to update preferences');
   });
 
+  static Future<Map<String, dynamic>?> computeAccuracy({
+    required String mbid,
+    required String artistName,
+    required String showDate,
+    required List<String> predictedSongs,
+    String? venue,
+    String? city,
+  }) => _call(() async {
+    final uri = Uri.parse('$_baseUrl/accuracy/compute');
+    final response = await http.post(uri,
+      headers: _jsonHeaders,
+      body: jsonEncode({
+        'mbid': mbid,
+        'artist_name': artistName,
+        'show_date': showDate,
+        'predicted_songs': predictedSongs,
+        if (venue != null) 'venue': venue,
+        if (city != null) 'city': city,
+      }),
+    );
+    if (response.statusCode == 200) return jsonDecode(response.body) as Map<String, dynamic>;
+    return null;
+  });
+
+  static Future<List<dynamic>> getAccuracy(String mbid) => _call(() async {
+    final uri = Uri.parse('$_baseUrl/accuracy/$mbid');
+    final response = await http.get(uri, headers: AuthService.authHeaders);
+    if (response.statusCode == 200) return jsonDecode(response.body) as List;
+    return [];
+  });
+
   static Future<void> disconnectPlatform(String platform) => _call(() async {
     final uri = Uri.parse('$_baseUrl/auth/connections/$platform');
     final response = await http.delete(uri, headers: AuthService.authHeaders);
