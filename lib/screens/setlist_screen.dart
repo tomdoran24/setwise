@@ -601,7 +601,7 @@ class _SetlistScreenState extends State<SetlistScreen> {
                             ],
                           ),
                         ),
-                        if (_dualSetlist == null || _activeSet == -1) ...[
+                        ...[
                           const SizedBox(width: 8),
                           OutlinedButton.icon(
                             onPressed: () => setState(() => _editing = !_editing),
@@ -617,41 +617,39 @@ class _SetlistScreenState extends State<SetlistScreen> {
                         ],
                       ],
                     ),
-                    if (_editing) ...[
-                      const SizedBox(height: 8),
-                      Row(
-                        children: [
-                          Text(
-                            'Min. probability: ${((_minFrequency / (_activeSongs.isEmpty ? 10 : _activeSongs.first['out_of'] as int)) * 100).round().clamp(1, 99)}%',
-                            style: const TextStyle(color: Colors.grey, fontSize: 12),
-                          ),
-                          const Spacer(),
-                          Text(
-                            '${_activeSongs.where((s) => (s['frequency'] as int) >= _minFrequency).length} songs',
-                            style: const TextStyle(color: Colors.grey, fontSize: 12),
-                          ),
-                        ],
-                      ),
-                      SliderTheme(
-                        data: SliderTheme.of(context).copyWith(
-                          activeTrackColor: const Color(0xFF4FC3F7),
-                          inactiveTrackColor: const Color(0xFF333333),
-                          thumbColor: const Color(0xFF4FC3F7),
-                          overlayColor: const Color(0x224FC3F7),
-                          trackHeight: 2,
+                    const SizedBox(height: 8),
+                    Row(
+                      children: [
+                        Text(
+                          'Min. probability: ${((_minFrequency / (_activeSongs.isEmpty ? 10 : _activeSongs.first['out_of'] as int)) * 100).round().clamp(1, 99)}%',
+                          style: const TextStyle(color: Colors.grey, fontSize: 12),
                         ),
-                        child: Slider(
-                          value: ((_minFrequency / (_activeSongs.isEmpty ? 10 : _activeSongs.first['out_of'] as int)) * 100).roundToDouble().clamp(10, 100),
-                          min: 10,
-                          max: 100,
-                          divisions: 9,
-                          onChanged: (v) {
-                            final outOf = _activeSongs.isEmpty ? 10 : _activeSongs.first['out_of'] as int;
-                            setState(() => _minFrequency = ((v / 100) * outOf).round().clamp(1, outOf));
-                          },
+                        const Spacer(),
+                        Text(
+                          '${_activeSongs.where((s) => (s['frequency'] as int) >= _minFrequency).length} songs',
+                          style: const TextStyle(color: Colors.grey, fontSize: 12),
                         ),
+                      ],
+                    ),
+                    SliderTheme(
+                      data: SliderTheme.of(context).copyWith(
+                        activeTrackColor: const Color(0xFF4FC3F7),
+                        inactiveTrackColor: const Color(0xFF333333),
+                        thumbColor: const Color(0xFF4FC3F7),
+                        overlayColor: const Color(0x224FC3F7),
+                        trackHeight: 2,
                       ),
-                    ],
+                      child: Slider(
+                        value: ((_minFrequency / (_activeSongs.isEmpty ? 10 : _activeSongs.first['out_of'] as int)) * 100).roundToDouble().clamp(10, 100),
+                        min: 10,
+                        max: 100,
+                        divisions: 9,
+                        onChanged: (v) {
+                          final outOf = _activeSongs.isEmpty ? 10 : _activeSongs.first['out_of'] as int;
+                          setState(() => _minFrequency = ((v / 100) * outOf).round().clamp(1, outOf));
+                        },
+                      ),
+                    ),
                     const SizedBox(height: 12),
                     if (!_editing)
                       const Padding(
