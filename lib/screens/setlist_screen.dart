@@ -621,7 +621,7 @@ class _SetlistScreenState extends State<SetlistScreen> {
                     Row(
                       children: [
                         Text(
-                          'Min. probability: ${((_minFrequency / (_activeSongs.isEmpty ? 10 : _activeSongs.first['out_of'] as int)) * 100).round().clamp(1, 99)}%',
+                          'Min. probability: ${(((_minFrequency / (_activeSongs.isEmpty ? 10 : _activeSongs.first['out_of'] as int)) * 100) / 10).round().clamp(1, 10) * 10}%',
                           style: const TextStyle(color: Colors.grey, fontSize: 12),
                         ),
                         const Spacer(),
@@ -640,13 +640,14 @@ class _SetlistScreenState extends State<SetlistScreen> {
                         trackHeight: 2,
                       ),
                       child: Slider(
-                        value: ((_minFrequency / (_activeSongs.isEmpty ? 10 : _activeSongs.first['out_of'] as int)) * 100).roundToDouble().clamp(10, 100),
+                        value: (((_minFrequency / (_activeSongs.isEmpty ? 10 : _activeSongs.first['out_of'] as int)) * 100) / 10).round().clamp(1, 10).toDouble() * 10,
                         min: 10,
                         max: 100,
                         divisions: 9,
                         onChanged: (v) {
+                          final snapped = (v / 10).round() * 10;
                           final outOf = _activeSongs.isEmpty ? 10 : _activeSongs.first['out_of'] as int;
-                          setState(() => _minFrequency = ((v / 100) * outOf).round().clamp(1, outOf));
+                          setState(() => _minFrequency = ((snapped / 100) * outOf).round().clamp(1, outOf));
                         },
                       ),
                     ),
